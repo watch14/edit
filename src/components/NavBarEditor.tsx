@@ -23,14 +23,29 @@ export default function NavBarEditor({
     <AppModal open={open} onClose={onClose} title="Edit Navbar">
       <div className="mb-4">
         <label className="block text-xs mb-1">Logo Text</label>
-        <input
-          className="border px-2 py-1 rounded w-full text-black bg-white"
-          value={draft.logo}
-          onChange={(e) => setDraft({ ...draft, logo: e.target.value })}
-        />
+        <div className="flex gap-2 items-center">
+          <input
+            className="border px-2 py-1 rounded flex-1 text-black bg-white"
+            value={draft.logo}
+            onChange={(e) => setDraft({ ...draft, logo: e.target.value })}
+          />
+          <ColorPicker
+            color={draft.logoColor}
+            onChange={(c) => setDraft({ ...draft, logoColor: c })}
+            label="Color"
+          />
+        </div>
       </div>
       <div className="mb-4">
         <label className="block text-xs mb-1">Nav Links</label>
+        <div className="flex gap-2 items-center mb-2">
+          <span className="text-xs">Link Color:</span>
+          <ColorPicker
+            color={draft.linkColor}
+            onChange={(c) => setDraft({ ...draft, linkColor: c })}
+            label="Color"
+          />
+        </div>
         {draft.links.map((link, i) => (
           <div key={i} className="flex gap-2 mb-1 items-center">
             <input

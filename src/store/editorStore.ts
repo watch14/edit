@@ -3,6 +3,8 @@ import { create } from "zustand";
 type HeroContent = {
   title: string;
   subtitle: string;
+  titleColor: string;
+  subtitleColor: string;
   button: {
     text: string;
     href: string;
@@ -16,7 +18,9 @@ type HeroContent = {
 
 type NavbarContent = {
   logo: string;
+  logoColor: string;
   links: { label: string; href: string }[];
+  linkColor: string;
   cta: { label: string; href: string; textColor: string; bgColor: string };
 };
 
@@ -33,6 +37,8 @@ const defaultHero: HeroContent = {
   title: "More than a traditional\nsoftware agency",
   subtitle:
     "We are specialists at building solid end-to-end software solutions that help you reach your business targets. If your IP lies in commercial knowledge and processes you need software solutions sustaining these enabling you to scale your business.",
+  titleColor: "#ffffff",
+  subtitleColor: "#ffffff",
   button: {
     text: "Work with us",
     href: "#",
@@ -46,11 +52,13 @@ const defaultHero: HeroContent = {
 
 const defaultNavbar: NavbarContent = {
   logo: "STAFF.",
+  logoColor: "#000000",
   links: [
     { label: "Cases", href: "#" },
     { label: "About", href: "#" },
     { label: "Contact", href: "#" },
   ],
+  linkColor: "#000000",
   cta: {
     label: "Work with us",
     href: "#",

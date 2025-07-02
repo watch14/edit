@@ -13,12 +13,12 @@ export default function Navbar() {
         <div className="w-full max-w-[1440px] flex items-center justify-between px-6">
           <div className="flex items-center">
             <span
-              className="font-black text-lg tracking-tight text-black relative"
-              style={
-                editMode
-                  ? { cursor: "pointer", outline: "1px dashed #2563eb" }
-                  : {}
-              }
+              className="font-black text-lg tracking-tight relative"
+              style={{
+                color: navbar.logoColor,
+                cursor: editMode ? "pointer" : "default",
+                outline: editMode ? "1px dashed #2563eb" : undefined,
+              }}
               onClick={() => editMode && setEditorOpen(true)}
               tabIndex={editMode ? 0 : -1}
             >
@@ -35,12 +35,12 @@ export default function Navbar() {
               <a
                 key={i}
                 href={link.href}
-                className="hover:underline text-black relative"
-                style={
-                  editMode
-                    ? { cursor: "pointer", outline: "1px dashed #2563eb" }
-                    : {}
-                }
+                className="hover:underline relative"
+                style={{
+                  color: navbar.linkColor,
+                  cursor: editMode ? "pointer" : "default",
+                  outline: editMode ? "1px dashed #2563eb" : undefined,
+                }}
                 onClick={(e) => {
                   if (editMode) {
                     e.preventDefault();

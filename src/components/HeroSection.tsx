@@ -28,7 +28,7 @@ export default function HeroSection() {
           <h1
             className="text-black text-[4vw] font-bold leading-tight mb-4 cursor-pointer relative"
             style={{
-              color: hero.button.textColor,
+              color: hero.titleColor,
               outline: editMode ? "1px dashed #2563eb" : undefined,
             }}
             onClick={() => editMode && setEditorOpen(true)}
@@ -43,7 +43,10 @@ export default function HeroSection() {
           </h1>
           <p
             className="text-black text-lg max-w-3xl mb-4 cursor-pointer relative"
-            style={{ outline: editMode ? "1px dashed #2563eb" : undefined }}
+            style={{
+              color: hero.subtitleColor,
+              outline: editMode ? "1px dashed #2563eb" : undefined,
+            }}
             onClick={() => editMode && setEditorOpen(true)}
             tabIndex={editMode ? 0 : -1}
           >

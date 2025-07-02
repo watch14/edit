@@ -128,15 +128,16 @@ export default function SaveLoadManager({
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto text-black">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-black">
-            Save / Load Configurations
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-xl p-4 sm:p-6 w-full max-w-sm sm:max-w-md md:max-w-2xl max-h-[90vh] overflow-y-auto text-black shadow-2xl">
+        <div className="flex justify-between items-center mb-4 sm:mb-6">
+          <h2 className="text-lg sm:text-2xl font-bold text-black">
+            Save / Load
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-gray-400 hover:text-gray-600 text-2xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+            aria-label="Close"
           >
             ✕
           </button>
@@ -156,22 +157,22 @@ export default function SaveLoadManager({
 
         {/* Save Section */}
         <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-3 text-black">
+          <h3 className="text-base sm:text-lg font-semibold mb-3 text-black">
             Save Current Configuration
           </h3>
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <input
               type="text"
               value={saveName}
               onChange={(e) => setSaveName(e.target.value)}
               placeholder="Enter configuration name..."
-              className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black text-sm sm:text-base"
               disabled={isLoading}
             />
             <button
               onClick={saveConfiguration}
               disabled={isLoading || !saveName.trim()}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base font-medium whitespace-nowrap transition-colors"
             >
               {isLoading ? "Saving..." : "Save"}
             </button>
@@ -180,49 +181,52 @@ export default function SaveLoadManager({
 
         {/* Load Section */}
         <div>
-          <h3 className="text-lg font-semibold mb-3 text-black">
+          <h3 className="text-base sm:text-lg font-semibold mb-3 text-black">
             Saved Configurations
           </h3>
 
           {isLoading && savedConfigs.length === 0 ? (
-            <div className="text-center py-4 text-black">Loading...</div>
+            <div className="text-center py-6 text-black text-sm">
+              Loading...
+            </div>
           ) : savedConfigs.length === 0 ? (
-            <div className="text-center py-4 text-gray-500">
+            <div className="text-center py-6 text-gray-500 text-sm">
               No saved configurations found
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-3">
               {savedConfigs.map((config) => (
                 <div
                   key={config.id}
-                  className="border border-gray-200 rounded p-3 hover:bg-gray-50"
+                  className="border border-gray-200 rounded-lg p-3 sm:p-4 hover:bg-gray-50 transition-colors"
                 >
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <h4 className="font-medium text-black">{config.name}</h4>
-                      <p className="text-sm text-gray-600">
-                        Hero: {config.hero.title}
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-medium text-black text-sm sm:text-base truncate">
+                        {config.name}
+                      </h4>
+                      <p className="text-xs sm:text-sm text-gray-600 truncate">
+                        Hero: {config.hero.title.substring(0, 30)}...
                       </p>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-xs sm:text-sm text-gray-600">
                         Logo: {config.navbar.logo}
                       </p>
                       <p className="text-xs text-gray-400">
-                        Modified:{" "}
-                        {new Date(config.lastModified).toLocaleString()}
+                        {new Date(config.lastModified).toLocaleDateString()}
                       </p>
                     </div>
-                    <div className="flex gap-2 ml-4">
+                    <div className="flex gap-2 sm:ml-4 sm:flex-col lg:flex-row">
                       <button
                         onClick={() => loadConfiguration(config)}
                         disabled={isLoading}
-                        className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 disabled:opacity-50"
+                        className="bg-blue-600 text-white px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-700 disabled:opacity-50 transition-colors font-medium flex-1 sm:flex-initial"
                       >
                         Load
                       </button>
                       <button
                         onClick={() => deleteConfiguration(config)}
                         disabled={isLoading}
-                        className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 disabled:opacity-50"
+                        className="bg-red-600 text-white px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-red-700 disabled:opacity-50 transition-colors font-medium flex-1 sm:flex-initial"
                       >
                         Delete
                       </button>

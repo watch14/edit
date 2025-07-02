@@ -47,104 +47,161 @@ export default function HeroEditor({
   return (
     <AppModal open={open} onClose={onClose} title="Edit Hero Section">
       <div className="mb-4">
-        <label className="block text-xs mb-1">Title</label>
-        <textarea
-          className="border px-2 py-1 rounded w-full mb-2 text-black bg-white"
-          value={draft.title}
-          onChange={(e) => setDraft({ ...draft, title: e.target.value })}
-          rows={2}
-        />
-        <label className="block text-xs mb-1">Subtitle</label>
-        <textarea
-          className="border px-2 py-1 rounded w-full mb-2 text-black bg-white"
-          value={draft.subtitle}
-          onChange={(e) => setDraft({ ...draft, subtitle: e.target.value })}
-          rows={2}
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-xs mb-1">Button Text</label>
-        <input
-          className="border px-2 py-1 rounded w-full mb-1 text-black bg-white"
-          value={draft.button.text}
-          onChange={(e) =>
-            setDraft({
-              ...draft,
-              button: { ...draft.button, text: e.target.value },
-            })
-          }
-        />
-        <label className="block text-xs mb-1">Button Link</label>
-        <input
-          className="border px-2 py-1 rounded w-full mb-1 text-black bg-white"
-          value={draft.button.href}
-          onChange={(e) =>
-            setDraft({
-              ...draft,
-              button: { ...draft.button, href: e.target.value },
-            })
-          }
-        />
-        <div className="flex gap-2 items-center mb-2">
-          <ColorPicker
-            color={draft.button.textColor}
-            onChange={(c) =>
-              setDraft({ ...draft, button: { ...draft.button, textColor: c } })
-            }
-            label="Text"
+        <label className="block text-xs sm:text-sm mb-1 font-medium">
+          Title
+        </label>
+        <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-end mb-3">
+          <textarea
+            className="border border-gray-300 px-3 py-2 rounded-lg flex-1 text-black bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            value={draft.title}
+            onChange={(e) => setDraft({ ...draft, title: e.target.value })}
+            rows={2}
+            placeholder="Enter hero title..."
           />
-          <ColorPicker
-            color={draft.button.bgColor}
-            onChange={(c) =>
-              setDraft({ ...draft, button: { ...draft.button, bgColor: c } })
-            }
-            label="BG"
+          <div className="w-full sm:w-auto">
+            <ColorPicker
+              color={draft.titleColor}
+              onChange={(c) => setDraft({ ...draft, titleColor: c })}
+              label="Color"
+            />
+          </div>
+        </div>
+        <label className="block text-xs sm:text-sm mb-1 font-medium">
+          Subtitle
+        </label>
+        <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-end mb-4">
+          <textarea
+            className="border border-gray-300 px-3 py-2 rounded-lg flex-1 text-black bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            value={draft.subtitle}
+            onChange={(e) => setDraft({ ...draft, subtitle: e.target.value })}
+            rows={3}
+            placeholder="Enter hero subtitle..."
           />
+          <div className="w-full sm:w-auto">
+            <ColorPicker
+              color={draft.subtitleColor}
+              onChange={(c) => setDraft({ ...draft, subtitleColor: c })}
+              label="Color"
+            />
+          </div>
         </div>
       </div>
-      <div className="mb-4">
-        <label className="block text-xs mb-1">Background</label>
-        <div className="flex gap-2 items-center mb-2">
-          <ColorPicker
-            color={draft.bgColor}
-            onChange={(c) =>
-              setDraft({ ...draft, bgColor: c, bgType: "color" })
-            }
-            label="Color"
-          />
-        </div>
-        <div className="mt-2">
-          <label className="block text-xs mb-1">Background Image</label>
-          <ImageUploader
-            onImageSelect={handleImageSelect}
-            currentImage={draft.bgType === "image" ? draft.bgImage : undefined}
-          />
-        </div>
-        <div className="mt-2">
-          <input
-            type="text"
-            placeholder="Or paste image URL"
-            className="border px-2 py-1 rounded text-xs w-full"
-            value={draft.bgType === "image" ? draft.bgImage : ""}
-            onChange={(e) =>
-              setDraft({ ...draft, bgImage: e.target.value, bgType: "image" })
-            }
-          />
+      <div className="mb-4 sm:mb-6">
+        <label className="block text-xs sm:text-sm mb-2 font-medium">
+          Button Settings
+        </label>
+        <div className="space-y-3">
+          <div>
+            <label className="block text-xs mb-1 text-gray-600">
+              Button Text
+            </label>
+            <input
+              className="border border-gray-300 px-3 py-2 rounded-lg w-full text-black bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={draft.button.text}
+              onChange={(e) =>
+                setDraft({
+                  ...draft,
+                  button: { ...draft.button, text: e.target.value },
+                })
+              }
+              placeholder="Enter button text..."
+            />
+          </div>
+          <div>
+            <label className="block text-xs mb-1 text-gray-600">
+              Button Link
+            </label>
+            <input
+              className="border border-gray-300 px-3 py-2 rounded-lg w-full text-black bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={draft.button.href}
+              onChange={(e) =>
+                setDraft({
+                  ...draft,
+                  button: { ...draft.button, href: e.target.value },
+                })
+              }
+              placeholder="Enter link URL..."
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <ColorPicker
+                color={draft.button.textColor}
+                onChange={(c) =>
+                  setDraft({
+                    ...draft,
+                    button: { ...draft.button, textColor: c },
+                  })
+                }
+                label="Text Color"
+              />
+            </div>
+            <div>
+              <ColorPicker
+                color={draft.button.bgColor}
+                onChange={(c) =>
+                  setDraft({
+                    ...draft,
+                    button: { ...draft.button, bgColor: c },
+                  })
+                }
+                label="Background"
+              />
+            </div>
+          </div>
         </div>
       </div>
-      <div className="flex gap-2 mt-4">
+      <div className="mb-6">
+        <label className="block text-xs sm:text-sm mb-2 font-medium">
+          Background
+        </label>
+        <div className="space-y-3">
+          <div>
+            <ColorPicker
+              color={draft.bgColor}
+              onChange={(c) =>
+                setDraft({ ...draft, bgColor: c, bgType: "color" })
+              }
+              label="Background Color"
+            />
+          </div>
+          <div>
+            <label className="block text-xs mb-1 text-gray-600">
+              Background Image
+            </label>
+            <ImageUploader
+              onImageSelect={handleImageSelect}
+              currentImage={
+                draft.bgType === "image" ? draft.bgImage : undefined
+              }
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              placeholder="Or paste image URL"
+              className="border border-gray-300 px-3 py-2 rounded-lg text-sm w-full text-black bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={draft.bgType === "image" ? draft.bgImage : ""}
+              onChange={(e) =>
+                setDraft({ ...draft, bgImage: e.target.value, bgType: "image" })
+              }
+            />
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col sm:flex-row gap-3 mt-6">
         <button
-          className="bg-blue-600 text-white px-4 py-2 rounded font-bold w-full"
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium w-full hover:bg-blue-700 transition-colors text-sm sm:text-base"
           onClick={() => {
             setHero(draft);
             console.log("[SAVE HERO]", draft);
             onClose();
           }}
         >
-          Save
+          Save Changes
         </button>
         <button
-          className="bg-gray-200 text-gray-800 px-4 py-2 rounded font-bold w-full"
+          className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-medium w-full hover:bg-gray-300 transition-colors text-sm sm:text-base"
           onClick={onClose}
         >
           Cancel
