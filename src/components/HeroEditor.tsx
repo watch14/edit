@@ -3,6 +3,7 @@ import React, { useState, useRef } from "react";
 import { useEditorStore } from "../store/editorStore";
 import ColorPicker from "./ColorPicker";
 import AppModal from "./AppModal";
+import ImageUploader from "./ImageUploader";
 
 export default function HeroEditor({
   open,
@@ -33,6 +34,14 @@ export default function HeroEditor({
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleImageSelect = (imageUrl: string) => {
+    setDraft({
+      ...draft,
+      bgImage: imageUrl,
+      bgType: imageUrl ? "image" : "color",
+    });
   };
 
   return (
@@ -103,38 +112,24 @@ export default function HeroEditor({
             }
             label="Color"
           />
-          <button
-            className="border px-2 py-1 rounded text-xs bg-white"
-            onClick={() => fileInput.current?.click()}
-          >
-            Upload Image
-          </button>
-          <input
-            ref={fileInput}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleBgImage}
+        </div>
+        <div className="mt-2">
+          <label className="block text-xs mb-1">Background Image</label>
+          <ImageUploader
+            onImageSelect={handleImageSelect}
+            currentImage={draft.bgType === "image" ? draft.bgImage : undefined}
           />
+        </div>
+        <div className="mt-2">
           <input
             type="text"
-            placeholder="Paste image URL"
-            className="border px-2 py-1 rounded text-xs w-40"
+            placeholder="Or paste image URL"
+            className="border px-2 py-1 rounded text-xs w-full"
             value={draft.bgType === "image" ? draft.bgImage : ""}
             onChange={(e) =>
               setDraft({ ...draft, bgImage: e.target.value, bgType: "image" })
             }
           />
-          {draft.bgType === "image" && (
-            <button
-              className="text-xs underline text-red-500"
-              onClick={() =>
-                setDraft({ ...draft, bgImage: "", bgType: "color" })
-              }
-            >
-              Remove Image
-            </button>
-          )}
         </div>
       </div>
       <div className="flex gap-2 mt-4">
