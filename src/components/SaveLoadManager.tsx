@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useEditorStore } from "../store/editorStore";
 import apiClient from "../lib/api";
 
@@ -17,14 +17,25 @@ interface SavedConfiguration {
   };
 }
 
-export default function SaveLoadManager() {
-  const [isOpen, setIsOpen] = useState(false);
+interface SaveLoadManagerProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function SaveLoadManager({ isOpen, onClose }: SaveLoadManagerProps) {
   const [savedConfigs, setSavedConfigs] = useState<SavedConfiguration[]>([]);
   const [saveName, setSaveName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   
   const { hero, navbar, setHero, setNavbar } = useEditorStore();
+
+  useEffect(() => {
+    if (isOpen) {
+      setMessage("");
+      loadConfigurations();
+    }
+  }, [isOpen]);
 
   const loadConfigurations = async () => {
     try {
@@ -76,7 +87,7 @@ export default function SaveLoadManager() {
         setHero(response.configuration.hero);
         setNavbar(response.configuration.navbar);
         setMessage(`Loaded "${config.name}" successfully!`);
-        setIsOpen(false);
+        onClose();
       }
     } catch (error) {
       console.error("Failed to load configuration:", error);
@@ -105,29 +116,21 @@ export default function SaveLoadManager() {
   };
 
   const handleOpen = () => {
-    setIsOpen(true);
     setMessage("");
     loadConfigurations();
   };
 
   if (!isOpen) {
-    return (
-      <button
-        onClick={handleOpen}
-        className="fixed top-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-      >
-        Save / Load
-      </button>
-    );
+    return null;
   }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+      <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto text-black">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">Save / Load Configurations</h2>
+          <h2 className="text-2xl font-bold text-black">Save / Load Configurations</h2>
           <button
-            onClick={() => setIsOpen(false)}
+            onClick={onClose}
             className="text-gray-500 hover:text-gray-700"
           >
             ✕
@@ -146,14 +149,14 @@ export default function SaveLoadManager() {
 
         {/* Save Section */}
         <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-3">Save Current Configuration</h3>
+          <h3 className="text-lg font-semibold mb-3 text-black">Save Current Configuration</h3>
           <div className="flex gap-2">
             <input
               type="text"
               value={saveName}
               onChange={(e) => setSaveName(e.target.value)}
               placeholder="Enter configuration name..."
-              className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
               disabled={isLoading}
             />
             <button
@@ -168,10 +171,10 @@ export default function SaveLoadManager() {
 
         {/* Load Section */}
         <div>
-          <h3 className="text-lg font-semibold mb-3">Saved Configurations</h3>
+          <h3 className="text-lg font-semibold mb-3 text-black">Saved Configurations</h3>
           
           {isLoading && savedConfigs.length === 0 ? (
-            <div className="text-center py-4">Loading...</div>
+            <div className="text-center py-4 text-black">Loading...</div>
           ) : savedConfigs.length === 0 ? (
             <div className="text-center py-4 text-gray-500">
               No saved configurations found
@@ -185,7 +188,7 @@ export default function SaveLoadManager() {
                 >
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
-                      <h4 className="font-medium">{config.name}</h4>
+                      <h4 className="font-medium text-black">{config.name}</h4>
                       <p className="text-sm text-gray-600">
                         Hero: {config.hero.title}
                       </p>
