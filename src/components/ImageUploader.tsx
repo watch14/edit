@@ -8,9 +8,14 @@ interface ImageUploaderProps {
   currentImage?: string;
 }
 
-export default function ImageUploader({ onImageSelect, currentImage }: ImageUploaderProps) {
+export default function ImageUploader({
+  onImageSelect,
+  currentImage,
+}: ImageUploaderProps) {
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadedImages, setUploadedImages] = useState<Array<{ filename: string; url: string }>>([]);
+  const [uploadedImages, setUploadedImages] = useState<
+    Array<{ filename: string; url: string }>
+  >([]);
   const [showGallery, setShowGallery] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -23,26 +28,28 @@ export default function ImageUploader({ onImageSelect, currentImage }: ImageUplo
     }
   };
 
-  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     // Validate file type
-    if (!file.type.startsWith('image/')) {
-      alert('Please select an image file');
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file");
       return;
     }
 
     // Validate file size (5MB)
     if (file.size > 5 * 1024 * 1024) {
-      alert('File size must be less than 5MB');
+      alert("File size must be less than 5MB");
       return;
     }
 
     try {
       setIsUploading(true);
       const response = await apiClient.uploadImage(file);
-      
+
       if (response.success) {
         const imageUrl = `http://localhost:3001${response.url}`;
         onImageSelect(imageUrl);
@@ -55,7 +62,7 @@ export default function ImageUploader({ onImageSelect, currentImage }: ImageUplo
       setIsUploading(false);
       // Reset file input
       if (fileInputRef.current) {
-        fileInputRef.current.value = '';
+        fileInputRef.current.value = "";
       }
     }
   };
@@ -67,7 +74,7 @@ export default function ImageUploader({ onImageSelect, currentImage }: ImageUplo
   };
 
   const handleDeleteImage = async (filename: string) => {
-    if (!confirm('Are you sure you want to delete this image?')) {
+    if (!confirm("Are you sure you want to delete this image?")) {
       return;
     }
 
@@ -95,7 +102,7 @@ export default function ImageUploader({ onImageSelect, currentImage }: ImageUplo
           onChange={handleFileSelect}
           className="hidden"
         />
-        
+
         <button
           onClick={() => fileInputRef.current?.click()}
           disabled={isUploading}
@@ -103,14 +110,14 @@ export default function ImageUploader({ onImageSelect, currentImage }: ImageUplo
         >
           {isUploading ? "Uploading..." : "Upload New"}
         </button>
-        
+
         <button
           onClick={openGallery}
           className="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700"
         >
           Gallery
         </button>
-        
+
         {currentImage && (
           <button
             onClick={() => onImageSelect("")}

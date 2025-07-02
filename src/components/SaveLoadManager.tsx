@@ -22,12 +22,15 @@ interface SaveLoadManagerProps {
   onClose: () => void;
 }
 
-export default function SaveLoadManager({ isOpen, onClose }: SaveLoadManagerProps) {
+export default function SaveLoadManager({
+  isOpen,
+  onClose,
+}: SaveLoadManagerProps) {
   const [savedConfigs, setSavedConfigs] = useState<SavedConfiguration[]>([]);
   const [saveName, setSaveName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
-  
+
   const { hero, navbar, setHero, setNavbar } = useEditorStore();
 
   useEffect(() => {
@@ -64,9 +67,9 @@ export default function SaveLoadManager({ isOpen, onClose }: SaveLoadManagerProp
         navbar,
       };
 
-      const configId = saveName.toLowerCase().replace(/\s+/g, '-');
+      const configId = saveName.toLowerCase().replace(/\s+/g, "-");
       await apiClient.saveNamedConfiguration(configId, configData);
-      
+
       setMessage("Configuration saved successfully!");
       setSaveName("");
       await loadConfigurations();
@@ -82,7 +85,7 @@ export default function SaveLoadManager({ isOpen, onClose }: SaveLoadManagerProp
     try {
       setIsLoading(true);
       const response = await apiClient.getConfiguration(config.id);
-      
+
       if (response.configuration) {
         setHero(response.configuration.hero);
         setNavbar(response.configuration.navbar);
@@ -128,7 +131,9 @@ export default function SaveLoadManager({ isOpen, onClose }: SaveLoadManagerProp
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto text-black">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-black">Save / Load Configurations</h2>
+          <h2 className="text-2xl font-bold text-black">
+            Save / Load Configurations
+          </h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700"
@@ -138,18 +143,22 @@ export default function SaveLoadManager({ isOpen, onClose }: SaveLoadManagerProp
         </div>
 
         {message && (
-          <div className={`p-3 rounded mb-4 ${
-            message.includes('Failed') 
-              ? 'bg-red-100 text-red-700' 
-              : 'bg-green-100 text-green-700'
-          }`}>
+          <div
+            className={`p-3 rounded mb-4 ${
+              message.includes("Failed")
+                ? "bg-red-100 text-red-700"
+                : "bg-green-100 text-green-700"
+            }`}
+          >
             {message}
           </div>
         )}
 
         {/* Save Section */}
         <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-3 text-black">Save Current Configuration</h3>
+          <h3 className="text-lg font-semibold mb-3 text-black">
+            Save Current Configuration
+          </h3>
           <div className="flex gap-2">
             <input
               type="text"
@@ -171,8 +180,10 @@ export default function SaveLoadManager({ isOpen, onClose }: SaveLoadManagerProp
 
         {/* Load Section */}
         <div>
-          <h3 className="text-lg font-semibold mb-3 text-black">Saved Configurations</h3>
-          
+          <h3 className="text-lg font-semibold mb-3 text-black">
+            Saved Configurations
+          </h3>
+
           {isLoading && savedConfigs.length === 0 ? (
             <div className="text-center py-4 text-black">Loading...</div>
           ) : savedConfigs.length === 0 ? (
@@ -196,7 +207,8 @@ export default function SaveLoadManager({ isOpen, onClose }: SaveLoadManagerProp
                         Logo: {config.navbar.logo}
                       </p>
                       <p className="text-xs text-gray-400">
-                        Modified: {new Date(config.lastModified).toLocaleString()}
+                        Modified:{" "}
+                        {new Date(config.lastModified).toLocaleString()}
                       </p>
                     </div>
                     <div className="flex gap-2 ml-4">

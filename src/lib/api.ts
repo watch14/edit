@@ -1,4 +1,5 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
 
 interface RequestOptions extends RequestInit {
   headers?: Record<string, string>;
@@ -15,7 +16,7 @@ class ApiClient {
     const url = `${this.baseURL}${endpoint}`;
     const config = {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...options.headers,
       },
       ...options,
@@ -31,14 +32,14 @@ class ApiClient {
 
       return data;
     } catch (error) {
-      console.error('API request failed:', error);
+      console.error("API request failed:", error);
       throw error;
     }
   }
 
   // Editor Configuration endpoints
   async getCurrentConfiguration() {
-    return this.request('/editor/configuration');
+    return this.request("/editor/configuration");
   }
 
   async getConfiguration(id: string) {
@@ -46,36 +47,36 @@ class ApiClient {
   }
 
   async saveCurrentConfiguration(data: any) {
-    return this.request('/editor/configuration', {
-      method: 'POST',
+    return this.request("/editor/configuration", {
+      method: "POST",
       body: JSON.stringify(data),
     });
   }
 
   async saveNamedConfiguration(id: string, data: any) {
     return this.request(`/editor/configuration/${id}`, {
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify(data),
     });
   }
 
   async getAllConfigurations() {
-    return this.request('/editor/configurations');
+    return this.request("/editor/configurations");
   }
 
   async deleteConfiguration(id: string) {
     return this.request(`/editor/configuration/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
     });
   }
 
   // File Upload endpoints
   async uploadImage(file: File) {
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append("image", file);
 
-    return this.request('/upload/image', {
-      method: 'POST',
+    return this.request("/upload/image", {
+      method: "POST",
       headers: {}, // Let browser set Content-Type for FormData
       body: formData,
     });
@@ -83,17 +84,17 @@ class ApiClient {
 
   async deleteImage(filename: string) {
     return this.request(`/upload/image/${filename}`, {
-      method: 'DELETE',
+      method: "DELETE",
     });
   }
 
   async getImages() {
-    return this.request('/upload/images');
+    return this.request("/upload/images");
   }
 
   // Health check
   async healthCheck() {
-    return this.request('/health');
+    return this.request("/health");
   }
 }
 

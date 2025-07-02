@@ -29,10 +29,10 @@ export default function EditModeToggle() {
           {editMode ? "Exit Edit Mode" : "Enter Edit Mode"}
         </button>
       </div>
-      
-      <SaveLoadManager 
-        isOpen={showSaveLoad} 
-        onClose={() => setShowSaveLoad(false)} 
+
+      <SaveLoadManager
+        isOpen={showSaveLoad}
+        onClose={() => setShowSaveLoad(false)}
       />
     </>
   );
