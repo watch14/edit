@@ -31,7 +31,8 @@ export default function SaveLoadManager({
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  const { hero, navbar, setHero, setNavbar } = useEditorStore();
+  const { hero, navbar, setHero, setNavbar, resetToDefaults } =
+    useEditorStore();
 
   useEffect(() => {
     if (isOpen) {
@@ -44,7 +45,13 @@ export default function SaveLoadManager({
     try {
       setIsLoading(true);
       const response = await apiClient.getAllConfigurations();
-      setSavedConfigs(response.configurations || []);
+      // Sort by lastModified date, latest first
+      const sortedConfigs = (response.configurations || []).sort(
+        (a: SavedConfiguration, b: SavedConfiguration) =>
+          new Date(b.lastModified).getTime() -
+          new Date(a.lastModified).getTime()
+      );
+      setSavedConfigs(sortedConfigs);
     } catch (error) {
       console.error("Failed to load configurations:", error);
       setMessage("Failed to load configurations");
@@ -118,6 +125,25 @@ export default function SaveLoadManager({
     }
   };
 
+  const resetToOriginal = () => {
+    if (
+      !confirm(
+        "Are you sure you want to reset to the original configuration? This will discard all current changes."
+      )
+    ) {
+      return;
+    }
+
+    try {
+      resetToDefaults();
+      setMessage("Reset to original configuration successfully!");
+      onClose();
+    } catch (error) {
+      console.error("Failed to reset configuration:", error);
+      setMessage("Failed to reset configuration");
+    }
+  };
+
   const handleOpen = () => {
     setMessage("");
     loadConfigurations();
@@ -179,6 +205,23 @@ export default function SaveLoadManager({
           </div>
         </div>
 
+        {/* Reset Section */}
+        <div className="mb-6">
+          <h3 className="text-base sm:text-lg font-semibold mb-3 text-black">
+            Reset Configuration
+          </h3>
+          <button
+            onClick={resetToOriginal}
+            disabled={isLoading}
+            className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base font-medium transition-colors w-full sm:w-auto"
+          >
+            Reset to Original
+          </button>
+          <p className="text-xs text-gray-500 mt-2">
+            This will restore the default hero and navbar settings
+          </p>
+        </div>
+
         {/* Load Section */}
         <div>
           <h3 className="text-base sm:text-lg font-semibold mb-3 text-black">
@@ -212,7 +255,7 @@ export default function SaveLoadManager({
                         Logo: {config.navbar.logo}
                       </p>
                       <p className="text-xs text-gray-400">
-                        {new Date(config.lastModified).toLocaleDateString()}
+                        {new Date(config.lastModified).toLocaleString()}
                       </p>
                     </div>
                     <div className="flex gap-2 sm:ml-4 sm:flex-col lg:flex-row">

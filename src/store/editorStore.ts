@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 type HeroContent = {
   title: string;
@@ -31,6 +32,7 @@ type EditorState = {
   setHero: (h: Partial<HeroContent>) => void;
   navbar: NavbarContent;
   setNavbar: (n: Partial<NavbarContent>) => void;
+  resetToDefaults: () => void;
 };
 
 const defaultHero: HeroContent = {
@@ -67,11 +69,24 @@ const defaultNavbar: NavbarContent = {
   },
 };
 
-export const useEditorStore = create<EditorState>((set) => ({
-  editMode: false,
-  setEditMode: (v) => set({ editMode: v }),
-  hero: defaultHero,
-  setHero: (h) => set((state) => ({ hero: { ...state.hero, ...h } })),
-  navbar: defaultNavbar,
-  setNavbar: (n) => set((state) => ({ navbar: { ...state.navbar, ...n } })),
-}));
+export const useEditorStore = create<EditorState>()(
+  persist(
+    (set) => ({
+      editMode: false,
+      setEditMode: (v) => set({ editMode: v }),
+      hero: defaultHero,
+      setHero: (h) => set((state) => ({ hero: { ...state.hero, ...h } })),
+      navbar: defaultNavbar,
+      setNavbar: (n) => set((state) => ({ navbar: { ...state.navbar, ...n } })),
+      resetToDefaults: () => set({ hero: defaultHero, navbar: defaultNavbar }),
+    }),
+    {
+      name: "webflow-editor-storage", // unique name for localStorage key
+      partialize: (state) => ({
+        hero: state.hero,
+        navbar: state.navbar,
+        // Don't persist editMode - it should always start as false
+      }),
+    }
+  )
+);

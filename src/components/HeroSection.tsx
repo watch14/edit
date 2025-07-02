@@ -2,11 +2,16 @@
 import React, { useRef } from "react";
 import HeroEditor from "./HeroEditor";
 import { useEditorStore } from "../store/editorStore";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function HeroSection() {
   const hero = useEditorStore((s) => s.hero);
   const editMode = useEditorStore((s) => s.editMode);
+  const { isAuthenticated } = useAuth();
   const [editorOpen, setEditorOpen] = React.useState(false);
+
+  // Only allow edit interactions if authenticated
+  const canEdit = editMode && isAuthenticated;
   return (
     <>
       <section
@@ -29,13 +34,13 @@ export default function HeroSection() {
             className="text-black text-[4vw] font-bold leading-tight mb-4 cursor-pointer relative"
             style={{
               color: hero.titleColor,
-              outline: editMode ? "1px dashed #2563eb" : undefined,
+              outline: canEdit ? "1px dashed #2563eb" : undefined,
             }}
-            onClick={() => editMode && setEditorOpen(true)}
-            tabIndex={editMode ? 0 : -1}
+            onClick={() => canEdit && setEditorOpen(true)}
+            tabIndex={canEdit ? 0 : -1}
           >
             {hero.title}
-            {editMode && (
+            {canEdit && (
               <span className="absolute -right-5 top-1/2 -translate-y-1/2 text-blue-600 text-lg">
                 ✎
               </span>
@@ -45,13 +50,13 @@ export default function HeroSection() {
             className="text-black text-lg max-w-3xl mb-4 cursor-pointer relative"
             style={{
               color: hero.subtitleColor,
-              outline: editMode ? "1px dashed #2563eb" : undefined,
+              outline: canEdit ? "1px dashed #2563eb" : undefined,
             }}
-            onClick={() => editMode && setEditorOpen(true)}
-            tabIndex={editMode ? 0 : -1}
+            onClick={() => canEdit && setEditorOpen(true)}
+            tabIndex={canEdit ? 0 : -1}
           >
             {hero.subtitle}
-            {editMode && (
+            {canEdit && (
               <span className="absolute -right-5 top-1/2 -translate-y-1/2 text-blue-600 text-lg">
                 ✎
               </span>
@@ -62,18 +67,18 @@ export default function HeroSection() {
             style={{
               color: hero.button.textColor,
               background: hero.button.bgColor,
-              outline: editMode ? "1px dashed #2563eb" : undefined,
+              outline: canEdit ? "1px dashed #2563eb" : undefined,
             }}
             onClick={(e) => {
-              if (editMode) {
+              if (canEdit) {
                 e.preventDefault();
                 setEditorOpen(true);
               }
             }}
-            tabIndex={editMode ? 0 : -1}
+            tabIndex={canEdit ? 0 : -1}
           >
             {hero.button.text}
-            {editMode && (
+            {canEdit && (
               <span className="absolute -right-5 top-1/2 -translate-y-1/2 text-blue-600 text-lg">
                 ✎
               </span>
